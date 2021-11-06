@@ -30,8 +30,8 @@ jobs:
           check-latest: true
           cache: "npm"
       - run: npm install
-      - run: npm lint
-      - run: npm build
+      - run: npm run lint
+      - run: npm run build
       - uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.NPMJS_TOKEN }}
