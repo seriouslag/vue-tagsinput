@@ -718,11 +718,6 @@ export default Vue.extend({
          */
     tagsFromValue () {
       if (this.value && this.value.length) {
-        if (!Array.isArray(this.value)) {
-          console.error('Tags Input: the v-model value must be an array!');
-
-          return;
-        }
 
         let tags = this.value;
 
