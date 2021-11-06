@@ -72,8 +72,8 @@
                     @mousedown.prevent="tagFromSearchOnClick(tag)"
                     class="tags-input-badge"
                     v-bind:class="{
-                        'tags-input-typeahead-item-default': index != searchSelection,
-                        'tags-input-typeahead-item-highlighted-default': index == searchSelection
+                        'tags-input-typeahead-item-default': index !== searchSelection,
+                        'tags-input-typeahead-item-highlighted-default': index === searchSelection
                     }"></span>
             </p>
 
@@ -91,8 +91,8 @@
                     @mouseover="searchSelection = index"
                     @mousedown.prevent="tagFromSearchOnClick(tag)"
                     v-bind:class="{
-                        'tags-input-typeahead-item-default': index != searchSelection,
-                        'tags-input-typeahead-item-highlighted-default': index == searchSelection
+                        'tags-input-typeahead-item-default': index !== searchSelection,
+                        'tags-input-typeahead-item-highlighted-default': index === searchSelection
                     }"></li>
             </ul>
         </div>
@@ -104,361 +104,361 @@ import Vue, { PropType } from 'vue';
 import { Tag } from './Tag';
 
 export default Vue.extend({
-    props: {
-        elementId: String,
+  props: {
+    elementId: String,
 
-        inputId: String,
+    inputId: String,
 
-        existingTags: {
-            type: Array as PropType<Array<Tag>>,
-            default: (): Tag[] => [],
-        },
-
-        value: {
-            type: Array as PropType<Array<Tag>>,
-            default: () => [],
-        },
-
-        idField: {
-            type: String,
-            default: 'key',
-        },
-
-        textField: {
-            type: String,
-            default: 'value',
-        },
-
-        displayField: {
-          type: String,
-          default: null,
-        },
-
-        valueFields: {
-            type: String,
-            default: null,
-        },
-
-        disabled: {
-            type: Boolean,
-            default: false
-        },
-
-        typeahead: {
-            type: Boolean,
-            default: false
-        },
-
-        typeaheadStyle: {
-            type: String,
-            default: 'badges'
-        },
-
-        typeaheadActivationThreshold: {
-            type: Number,
-            default: 1
-        },
-
-        typeaheadMaxResults: {
-            type: Number,
-            default: 0
-        },
-
-        typeaheadAlwaysShow: {
-            type: Boolean,
-            default: false
-        },
-
-        typeaheadShowOnFocus: {
-            type: Boolean,
-            default: true
-        },
-
-        typeaheadHideDiscard: {
-            type: Boolean,
-            default: false
-        },
-
-        typeaheadUrl: {
-            type: String,
-            default: ''
-        },
-
-        typeaheadCallback: {
-            type: Function as PropType<(str: string) => Promise<Tag[]>>,
-            default: null
-        },
-
-        placeholder: {
-            type: String,
-            default: 'Add a tag'
-        },
-
-        discardSearchText: {
-            type: String,
-            default: 'Discard Search Results'
-        },
-
-        limit: {
-            type: Number,
-            default: 0
-        },
-
-        hideInputOnLimit: {
-            type: Boolean,
-            default: false
-        },
-
-        onlyExistingTags: {
-            type: Boolean,
-            default: false
-        },
-
-        deleteOnBackspace: {
-            type: Boolean,
-            default: true
-        },
-
-        allowDuplicates: {
-            type: Boolean,
-            default: false
-        },
-
-        validate: {
-            type: Function as PropType<() => boolean>,
-            default: () => true
-        },
-
-        addTagsOnComma: {
-            type: Boolean,
-            default: false
-        },
-
-        addTagsOnSpace: {
-            type: Boolean,
-            default: false
-        },
-
-        addTagsOnBlur: {
-            type: Boolean,
-            default: false
-        },
-
-        wrapperClass: {
-            type: String,
-            default: 'tags-input-wrapper-default'
-        },
-
-        sortSearchResults: {
-            type: Boolean,
-            default: true
-        },
-
-        caseSensitiveTags: {
-            type: Boolean,
-            default: false
-        },
-
-        beforeAddingTag: {
-            type: Function as PropType<((tag: Tag) => boolean)>,
-            default: () => (tag: Tag) => true,
-        },
-
-        beforeRemovingTag: {
-            type: Function as PropType<(tag: Tag) => boolean>,
-            default: () => (tag: Tag) => true
-        },
+    existingTags: {
+      type: Array as PropType<Array<Tag>>,
+      default: (): Tag[] => [],
     },
 
-    data() {
-        return {
-            badgeId: 0,
-            tags: [] as Tag[],
-
-            input: '',
-            oldInput: '',
-            hiddenInput: '',
-
-            searchResults: [] as Array<Tag>,
-            searchSelection: 0,
-
-            selectedTag: -1,
-
-            isActive: false,
-            composing: false,
-
-            typeaheadTags: [] as Tag[],
-        };
+    value: {
+      type: Array as PropType<Array<Tag>>,
+      default: () => [],
     },
 
-    created (): void {
-        this.typeaheadTags = this.cloneArray(this.existingTags);
+    idField: {
+      type: String,
+      default: 'key',
+    },
 
-        this.tagsFromValue();
+    textField: {
+      type: String,
+      default: 'value',
+    },
 
-        if (this.typeaheadAlwaysShow) {
-            this.searchTag();
+    displayField: {
+      type: String,
+      default: null,
+    },
+
+    valueFields: {
+      type: String,
+      default: null,
+    },
+
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+
+    typeahead: {
+      type: Boolean,
+      default: false,
+    },
+
+    typeaheadStyle: {
+      type: String,
+      default: 'badges',
+    },
+
+    typeaheadActivationThreshold: {
+      type: Number,
+      default: 1,
+    },
+
+    typeaheadMaxResults: {
+      type: Number,
+      default: 0,
+    },
+
+    typeaheadAlwaysShow: {
+      type: Boolean,
+      default: false,
+    },
+
+    typeaheadShowOnFocus: {
+      type: Boolean,
+      default: true,
+    },
+
+    typeaheadHideDiscard: {
+      type: Boolean,
+      default: false,
+    },
+
+    typeaheadUrl: {
+      type: String,
+      default: '',
+    },
+
+    typeaheadCallback: {
+      type: Function as PropType<(str: string) => Promise<Tag[]>>,
+      default: null,
+    },
+
+    placeholder: {
+      type: String,
+      default: 'Add a tag',
+    },
+
+    discardSearchText: {
+      type: String,
+      default: 'Discard Search Results',
+    },
+
+    limit: {
+      type: Number,
+      default: 0,
+    },
+
+    hideInputOnLimit: {
+      type: Boolean,
+      default: false,
+    },
+
+    onlyExistingTags: {
+      type: Boolean,
+      default: false,
+    },
+
+    deleteOnBackspace: {
+      type: Boolean,
+      default: true,
+    },
+
+    allowDuplicates: {
+      type: Boolean,
+      default: false,
+    },
+
+    validate: {
+      type: Function as PropType<() => boolean>,
+      default: () => true,
+    },
+
+    addTagsOnComma: {
+      type: Boolean,
+      default: false,
+    },
+
+    addTagsOnSpace: {
+      type: Boolean,
+      default: false,
+    },
+
+    addTagsOnBlur: {
+      type: Boolean,
+      default: false,
+    },
+
+    wrapperClass: {
+      type: String,
+      default: 'tags-input-wrapper-default',
+    },
+
+    sortSearchResults: {
+      type: Boolean,
+      default: true,
+    },
+
+    caseSensitiveTags: {
+      type: Boolean,
+      default: false,
+    },
+
+    beforeAddingTag: {
+      type: Function as PropType<((tag: Tag) => boolean)>,
+      default: () => (tag: Tag) => true,
+    },
+
+    beforeRemovingTag: {
+      type: Function as PropType<(tag: Tag) => boolean>,
+      default: () => (tag: Tag) => true,
+    },
+  },
+
+  data () {
+    return {
+      badgeId: 0,
+      tags: [] as Tag[],
+
+      input: '',
+      oldInput: '',
+      hiddenInput: '',
+
+      searchResults: [] as Array<Tag>,
+      searchSelection: 0,
+
+      selectedTag: -1,
+
+      isActive: false,
+      composing: false,
+
+      typeaheadTags: [] as Tag[],
+    };
+  },
+
+  created (): void {
+    this.typeaheadTags = this.cloneArray(this.existingTags);
+
+    this.tagsFromValue();
+
+    if (this.typeaheadAlwaysShow) {
+      this.searchTag();
+    }
+  },
+
+  mounted (): void {
+    // Emit an event
+    this.$emit('initialized');
+
+    document.addEventListener('click', (e) => {
+      if (e.target !== this.$refs['taginput']) {
+        this.clearSearchResults();
+      }
+    });
+  },
+
+  computed: {
+    hideInputField (): boolean {
+      return (this.hideInputOnLimit && this.limit > 0 && this.tags.length >= this.limit) || this.disabled;
+    },
+  },
+
+  watch: {
+    input (newVal: string, oldVal: string): void {
+      this.searchTag();
+
+      if (newVal.length && newVal !== oldVal) {
+        const diff = newVal.substring(oldVal.length, newVal.length);
+
+        if (this.addTagsOnSpace) {
+          if (newVal.endsWith(' ')) {
+            // The space shouldn't actually be inserted
+            this.input = newVal.trim();
+
+            // Add the inputed tag
+            this.tagFromInput(true);
+          }
         }
-    },
 
-    mounted (): void {
-        // Emit an event
-        this.$emit('initialized');
+        if (this.addTagsOnComma) {
+          newVal = newVal.trim();
 
-        document.addEventListener('click', (e) => {
-            if (e.target !== this.$refs['taginput']) {
-                this.clearSearchResults();
-            }
-        });
-    },
+          if (newVal.endsWith(',')) {
+            // The comma shouldn't actually be inserted
+            this.input = newVal.substring(0, newVal.length - 1);
 
-    computed: {
-        hideInputField(): boolean {
-            return (this.hideInputOnLimit && this.limit > 0 && this.tags.length >= this.limit) || this.disabled;
+            // Add the inputed tag
+            this.tagFromInput(true);
+          }
         }
+
+        this.$emit('change', newVal);
+      }
     },
 
-    watch: {
-        input(newVal: string, oldVal: string): void {
-            this.searchTag();
+    existingTags (newVal: Tag[]) {
+      this.typeaheadTags.splice(0);
 
-            if (newVal.length && newVal != oldVal) {
-                const diff = newVal.substring(oldVal.length, newVal.length);
+      this.typeaheadTags = this.cloneArray(newVal);
 
-                if (this.addTagsOnSpace) {
-                    if (newVal.endsWith(' ')) {
-                        // The space shouldn't actually be inserted
-                        this.input = newVal.trim();
-
-                        // Add the inputed tag
-                        this.tagFromInput(true);
-                    }
-                }
-
-                if (this.addTagsOnComma) {
-                    newVal = newVal.trim();
-
-                    if (newVal.endsWith(',')) {
-                        // The comma shouldn't actually be inserted
-                        this.input = newVal.substring(0, newVal.length - 1);
-
-                        // Add the inputed tag
-                        this.tagFromInput(true);
-                    }
-                }
-
-                this.$emit('change', newVal);
-            }
-        },
-
-        existingTags(newVal: Tag[]) {
-            this.typeaheadTags.splice(0);
-
-            this.typeaheadTags = this.cloneArray(newVal);
-
-            this.searchTag();
-        },
-
-        tags(): void {
-            // Updating the hidden input
-            this.hiddenInput = JSON.stringify(this.tags);
-
-            // Update the bound v-model value
-            this.$emit('input', this.tags);
-        },
-
-        value(): void {
-            this.tagsFromValue();
-        },
-
-        typeaheadAlwaysShow(newValue: boolean) {
-            if (newValue) {
-                this.searchTag();
-            } else {
-                this.clearSearchResults();
-            }
-        },
+      this.searchTag();
     },
 
-    methods: {
-        /**
+    tags (): void {
+      // Updating the hidden input
+      this.hiddenInput = JSON.stringify(this.tags);
+
+      // Update the bound v-model value
+      this.$emit('input', this.tags);
+    },
+
+    value (): void {
+      this.tagsFromValue();
+    },
+
+    typeaheadAlwaysShow (newValue: boolean) {
+      if (newValue) {
+        this.searchTag();
+      } else {
+        this.clearSearchResults();
+      }
+    },
+  },
+
+  methods: {
+    /**
          * Remove reserved regex characters from a string so that they don't
          * affect search results
          *
          * @param string
          * @returns String
          */
-        escapeRegExp(string: string): string {
-            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        },
+    escapeRegExp (string: string): string {
+      return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    },
 
-        /**
+    /**
          * Add a tag whether from user input or from search results (typeahead)
          *
          * @param ignoreSearchResults
          * @returns void
          */
-        tagFromInput(ignoreSearchResults = false): void {
-            if (this.composing) return;
+    tagFromInput (ignoreSearchResults = false): void {
+      if (this.composing) return;
 
-            // If we're choosing a tag from the search results
-            if (this.searchResults.length && this.searchSelection >= 0 && !ignoreSearchResults) {
-                this.tagFromSearch(this.searchResults[this.searchSelection]);
+      // If we're choosing a tag from the search results
+      if (this.searchResults.length && this.searchSelection >= 0 && !ignoreSearchResults) {
+        this.tagFromSearch(this.searchResults[this.searchSelection]);
 
-                this.input = '';
-            } else {
-                // If we're adding an unexisting tag
-                let text = this.input.trim();
+        this.input = '';
+      } else {
+        // If we're adding an unexisting tag
+        let text = this.input.trim();
 
-                // If the new tag is not an empty string and passes validation
-                if (!this.onlyExistingTags && text.length) {
-                    this.input = '';
+        // If the new tag is not an empty string and passes validation
+        if (!this.onlyExistingTags && text.length) {
+          this.input = '';
 
-                    // Determine if the inputted tag exists in the typeagedTags
-                    // array
-                    let newTag = {
-                        [this.idField]: '',
-                        [this.textField]: text
-                    };
+          // Determine if the inputted tag exists in the typeagedTags
+          // array
+          let newTag = {
+            [this.idField]: '',
+            [this.textField]: text,
+          };
 
-                    const searchQuery = this.escapeRegExp(
-                        this.caseSensitiveTags
-                            ? newTag[this.textField]
-                            : newTag[this.textField].toLowerCase()
-                    );
+          const searchQuery = this.escapeRegExp(
+            this.caseSensitiveTags
+              ? newTag[this.textField]
+              : newTag[this.textField].toLowerCase(),
+          );
 
-                    for (let tag of this.typeaheadTags) {
-                        const compareable = this.escapeRegExp(
-                            this.caseSensitiveTags
-                                ? tag[this.textField]
-                                : tag[this.textField].toLowerCase()
-                        );
+          for (let tag of this.typeaheadTags) {
+            const compareable = this.escapeRegExp(
+              this.caseSensitiveTags
+                ? tag[this.textField]
+                : tag[this.textField].toLowerCase(),
+            );
 
-                        if (searchQuery === compareable) {
-                            newTag = Object.assign({}, tag);
+            if (searchQuery === compareable) {
+              newTag = Object.assign({}, tag);
 
-                            break;
-                        }
-                    }
-
-                    this.addTag(newTag);
-                }
+              break;
             }
-        },
+          }
 
-        /**
+          this.addTag(newTag);
+        }
+      }
+    },
+
+    /**
          * Add a tag from search results when a user clicks on it
          *
          * @param tag
          * @returns void
          */
-        tagFromSearchOnClick(tag: Tag) {
-            this.tagFromSearch(tag);
+    tagFromSearchOnClick (tag: Tag) {
+      this.tagFromSearch(tag);
 
-            (this.$refs['taginput'] as HTMLElement).blur();
-        },
+      (this.$refs['taginput'] as HTMLElement).blur();
+    },
 
-        /**
+    /**
          * Add the selected tag from the search results.
          * Clear search results.
          * Clear user input.
@@ -466,433 +466,433 @@ export default Vue.extend({
          * @param tag
          * @return void
          */
-        tagFromSearch(tag: Tag) {
-            this.clearSearchResults();
-            this.addTag(tag);
+    tagFromSearch (tag: Tag) {
+      this.clearSearchResults();
+      this.addTag(tag);
 
-            this.$nextTick(() => {
-                this.input = '';
-                this.oldInput = '';
-            });
-        },
+      this.$nextTick(() => {
+        this.input = '';
+        this.oldInput = '';
+      });
+    },
 
-        /**
+    /**
          * Add/Select a tag
          *
          * @param tag Tag
          * @param force Boolean
          * @returns void | Boolean
          */
-        addTag(tag: Tag, force = false) {
-            if (this.disabled && !force) {
-                return;
-            }
+    addTag (tag: Tag, force = false) {
+      if (this.disabled && !force) {
+        return;
+      }
 
-            if (!this.beforeAddingTag(tag)) {
-                return false;
-            }
+      if (!this.beforeAddingTag(tag)) {
+        return false;
+      }
 
-            // Check if the limit has been reached
-            if (this.limit > 0 && this.tags.length >= this.limit) {
-                this.$emit('limit-reached');
+      // Check if the limit has been reached
+      if (this.limit > 0 && this.tags.length >= this.limit) {
+        this.$emit('limit-reached');
 
-                return false;
-            }
+        return false;
+      }
 
-            // Attach the tag if it hasn't been attached yet
-            if (!this.tagSelected(tag)) {
-                this.tags.push(tag);
+      // Attach the tag if it hasn't been attached yet
+      if (!this.tagSelected(tag)) {
+        this.tags.push(tag);
 
-                // Emit events
-                this.$nextTick(() => {
-                    this.$emit('tag-added', tag);
-                    this.$emit('tags-updated');
-                });
-            }
-        },
+        // Emit events
+        this.$nextTick(() => {
+          this.$emit('tag-added', tag);
+          this.$emit('tags-updated');
+        });
+      }
+    },
 
-        /**
+    /**
          * Remove the last tag in the tags array.
          *
          * @returns void
          */
-        removeLastTag(): void {
-            if (!this.input.length && this.deleteOnBackspace && this.tags.length) {
-                this.removeTag(this.tags.length - 1);
-            }
-        },
+    removeLastTag (): void {
+      if (!this.input.length && this.deleteOnBackspace && this.tags.length) {
+        this.removeTag(this.tags.length - 1);
+      }
+    },
 
-        /**
+    /**
          * Remove the selected tag at the specified index.
          *
          * @param index
          * @returns void
          */
-        removeTag(index: number): void {
-            if (this.disabled) {
-                return;
-            }
+    removeTag (index: number): void {
+      if (this.disabled) {
+        return;
+      }
 
-            let tag = this.tags[index];
+      let tag = this.tags[index];
 
-            if (!this.beforeRemovingTag(tag)) {
-                return;
-            }
+      if (!this.beforeRemovingTag(tag)) {
+        return;
+      }
 
-            this.tags.splice(index, 1);
+      this.tags.splice(index, 1);
 
-            // Emit events
-            this.$nextTick(() => {
-                this.$emit('tag-removed', tag);
-                this.$emit('tags-updated');
+      // Emit events
+      this.$nextTick(() => {
+        this.$emit('tag-removed', tag);
+        this.$emit('tags-updated');
 
-                if (this.typeaheadAlwaysShow) {
-                    this.searchTag();
-                }
-            });
-        },
+        if (this.typeaheadAlwaysShow) {
+          this.searchTag();
+        }
+      });
+    },
 
-        /**
+    /**
          * Search the currently entered text in the list of existing tags
          *
          * @returns void | Boolean
          */
-        searchTag() {
-            if (this.typeahead !== true) {
-                return false;
-            }
+    searchTag () {
+      if (this.typeahead !== true) {
+        return false;
+      }
 
-            if (this.oldInput != this.input || (!this.searchResults.length && this.typeaheadActivationThreshold == 0) || this.typeaheadAlwaysShow || this.typeaheadShowOnFocus) {
-                if (!this.typeaheadUrl.length && !this.typeaheadCallback) {
-                    this.searchResults = [];
-                }
+      if (this.oldInput !== this.input || (!this.searchResults.length && this.typeaheadActivationThreshold === 0) || this.typeaheadAlwaysShow || this.typeaheadShowOnFocus) {
+        if (!this.typeaheadUrl.length && !this.typeaheadCallback) {
+          this.searchResults = [];
+        }
 
-                this.searchSelection = 0;
-                let input = this.input.trim();
+        this.searchSelection = 0;
+        let input = this.input.trim();
 
-                if ((input.length && input.length >= this.typeaheadActivationThreshold) || this.typeaheadActivationThreshold == 0 || this.typeaheadAlwaysShow) {
-                    // Find all the existing tags which include the search text
-                    const searchQuery = this.escapeRegExp(
-                        this.caseSensitiveTags ? input : input.toLowerCase()
-                    );
+        if ((input.length && input.length >= this.typeaheadActivationThreshold) || this.typeaheadActivationThreshold === 0 || this.typeaheadAlwaysShow) {
+          // Find all the existing tags which include the search text
+          const searchQuery = this.escapeRegExp(
+            this.caseSensitiveTags ? input : input.toLowerCase(),
+          );
 
-                    // AJAX search
-                    if (this.typeaheadCallback) {
-                        this.typeaheadCallback(searchQuery)
-                            .then((results) => {
-                                this.typeaheadTags = results;
-                            });
-                    } else if (this.typeaheadUrl.length > 0) {
-                        this.typeaheadTags.splice(0);
-                        const xhttp = new XMLHttpRequest();
-                        const that = this;
+          // AJAX search
+          if (this.typeaheadCallback) {
+            this.typeaheadCallback(searchQuery)
+              .then((results) => {
+                this.typeaheadTags = results;
+              });
+          } else if (this.typeaheadUrl.length > 0) {
+            this.typeaheadTags.splice(0);
+            const xhttp = new XMLHttpRequest();
+            const that = this;
 
-                        xhttp.onreadystatechange = function () {
-                            if (this.readyState == 4 && this.status == 200) {
-                                that.typeaheadTags = JSON.parse(xhttp.responseText);
+            xhttp.onreadystatechange = function () {
+              if (this.readyState === 4 && this.status === 200) {
+                that.typeaheadTags = JSON.parse(xhttp.responseText);
 
-                                that.doSearch(searchQuery);
-                            }
-                        }
+                that.doSearch(searchQuery);
+              }
+            };
 
-                        const endpoint = this.typeaheadUrl.replace(':search', searchQuery);
-                        xhttp.open('GET', endpoint, true);
-                        xhttp.send();
-                    } else {
-                        // Search the existing collection
-                        this.doSearch(searchQuery);
-                    }
-                }
+            const endpoint = this.typeaheadUrl.replace(':search', searchQuery);
+            xhttp.open('GET', endpoint, true);
+            xhttp.send();
+          } else {
+            // Search the existing collection
+            this.doSearch(searchQuery);
+          }
+        }
 
-                this.oldInput = this.input;
-            }
-        },
+        this.oldInput = this.input;
+      }
+    },
 
-        /**
+    /**
          * Perform the actual search
          *
          * @param string searchQuery
          * @return void
          */
-        doSearch(searchQuery: string): void {
-            this.searchResults = [];
+    doSearch (searchQuery: string): void {
+      this.searchResults = [];
 
-            for (let tag of this.typeaheadTags) {
-                const compareable = this.caseSensitiveTags
-                    ? tag[this.textField]
-                    : tag[this.textField].toLowerCase();
-                const ids = this.searchResults.map((res) => (res[this.idField]));
+      for (let tag of this.typeaheadTags) {
+        const compareable = this.caseSensitiveTags
+          ? tag[this.textField]
+          : tag[this.textField].toLowerCase();
+        const ids = this.searchResults.map((res) => (res[this.idField]));
 
-                if (compareable.search(searchQuery) > -1 && ! this.tagSelected(tag) && ! ids.includes(tag[this.idField])) {
-                    this.searchResults.push(tag);
-                }
-            }
+        if (compareable.search(searchQuery) > -1 && ! this.tagSelected(tag) && ! ids.includes(tag[this.idField])) {
+          this.searchResults.push(tag);
+        }
+      }
 
-            // Sort the search results alphabetically
-            if (this.sortSearchResults) {
-                this.searchResults.sort((a, b) => {
-                    if (a[this.textField] < b[this.textField]) return -1;
-                    if (a[this.textField] > b[this.textField]) return 1;
+      // Sort the search results alphabetically
+      if (this.sortSearchResults) {
+        this.searchResults.sort((a, b) => {
+          if (a[this.textField] < b[this.textField]) return -1;
+          if (a[this.textField] > b[this.textField]) return 1;
 
-                    return 0;
-                });
-            }
+          return 0;
+        });
+      }
 
-            // Shorten Search results to desired length
-            if (this.typeaheadMaxResults > 0) {
-                this.searchResults = this.searchResults.slice(
-                    0,
-                    this.typeaheadMaxResults
-                );
-            }
-        },
+      // Shorten Search results to desired length
+      if (this.typeaheadMaxResults > 0) {
+        this.searchResults = this.searchResults.slice(
+          0,
+          this.typeaheadMaxResults,
+        );
+      }
+    },
 
-        /**
+    /**
          * Hide the typeahead if there's nothing intered into the input field.
          *
          * @returns void
          */
-        hideTypeahead(): void {
-            if (! this.input.length) {
-                this.$nextTick(() => {
-                    this.clearSearchResults();
-                });
-            }
-        },
+    hideTypeahead (): void {
+      if (! this.input.length) {
+        this.$nextTick(() => {
+          this.clearSearchResults();
+        });
+      }
+    },
 
-        /**
+    /**
          * Select the next search result in typeahead.
          *
          * @returns void
          */
-        nextSearchResult(): void {
-            if (this.searchSelection + 1 <= this.searchResults.length - 1) {
-                this.searchSelection++;
-            }
-        },
+    nextSearchResult (): void {
+      if (this.searchSelection + 1 <= this.searchResults.length - 1) {
+        this.searchSelection++;
+      }
+    },
 
-        /**
+    /**
          * Select the previous search result in typeahead.
          *
          * @returns void
          */
-        prevSearchResult(): void {
-            if (this.searchSelection > 0) {
-                this.searchSelection--;
-            }
-        },
+    prevSearchResult (): void {
+      if (this.searchSelection > 0) {
+        this.searchSelection--;
+      }
+    },
 
-        /**
+    /**
          * Clear/Empty the search results.
          *
          * @reutrns void
          */
-        clearSearchResults(returnFocus = false): void {
-            this.searchResults = [];
-            this.searchSelection = 0;
+    clearSearchResults (returnFocus = false): void {
+      this.searchResults = [];
+      this.searchSelection = 0;
 
-            if (this.typeaheadAlwaysShow) {
-                this.$nextTick(() => {
-                    this.searchTag();
-                });
-            }
+      if (this.typeaheadAlwaysShow) {
+        this.$nextTick(() => {
+          this.searchTag();
+        });
+      }
 
-            if (returnFocus) {
-                (this.$refs['taginput'] as HTMLElement).focus();
-            }
-        },
+      if (returnFocus) {
+        (this.$refs['taginput'] as HTMLElement).focus();
+      }
+    },
 
-        /**
+    /**
          * Clear the list of selected tags.
          *
          * @returns void
          */
-        clearTags(): void {
-            this.tags.splice(0, this.tags.length);
-        },
+    clearTags (): void {
+      this.tags.splice(0, this.tags.length);
+    },
 
-        /**
+    /**
          * Replace the currently selected tags with the tags from the value.
          *
          * @returns void
          */
-        tagsFromValue() {
-            if (this.value && this.value.length) {
-                if (!Array.isArray(this.value)) {
-                    console.error('Tags Input: the v-model value must be an array!');
+    tagsFromValue () {
+      if (this.value && this.value.length) {
+        if (!Array.isArray(this.value)) {
+          console.error('Tags Input: the v-model value must be an array!');
 
-                    return;
-                }
+          return;
+        }
 
-                let tags = this.value;
+        let tags = this.value;
 
-                // Don't update if nothing has changed
-                if (this.tags == tags) {
-                    return;
-                }
+        // Don't update if nothing has changed
+        if (this.tags === tags) {
+          return;
+        }
 
-                this.clearTags();
+        this.clearTags();
 
-                for (let tag of tags) {
-                    this.addTag(tag, true);
-                }
-            } else {
-                if (this.tags.length == 0) {
-                    return;
-                }
+        for (let tag of tags) {
+          this.addTag(tag, true);
+        }
+      } else {
+        if (this.tags.length === 0) {
+          return;
+        }
 
-                this.clearTags();
-            }
-        },
+        this.clearTags();
+      }
+    },
 
-        /**
+    /**
          * Check if a tag is already selected.
          *
          * @param tag
          * @returns Boolean
          */
-        tagSelected(tag: Tag) {
-            if (this.allowDuplicates) {
-                return false;
-            }
+    tagSelected (tag: Tag) {
+      if (this.allowDuplicates) {
+        return false;
+      }
 
-            if (! tag) {
-                return false;
-            }
+      if (! tag) {
+        return false;
+      }
 
-            const searchQuery = this.escapeRegExp(
-                this.caseSensitiveTags ? tag[this.textField] : tag[this.textField].toLowerCase()
-            );
+      const searchQuery = this.escapeRegExp(
+        this.caseSensitiveTags ? tag[this.textField] : tag[this.textField].toLowerCase(),
+      );
 
-            for (let selectedTag of this.tags) {
-                const compareable = this.caseSensitiveTags
-                    ? selectedTag[this.textField]
-                    : selectedTag[this.textField].toLowerCase();
+      for (let selectedTag of this.tags) {
+        const compareable = this.caseSensitiveTags
+          ? selectedTag[this.textField]
+          : selectedTag[this.textField].toLowerCase();
 
-                if (selectedTag[this.idField] === tag[this.idField] && this.escapeRegExp(compareable).length == searchQuery.length && compareable.search(searchQuery) > -1) {
-                    return true;
-                }
-            }
+        if (selectedTag[this.idField] === tag[this.idField] && this.escapeRegExp(compareable).length === searchQuery.length && compareable.search(searchQuery) > -1) {
+          return true;
+        }
+      }
 
-            return false;
-        },
+      return false;
+    },
 
-        /**
+    /**
          * Clear the input.
          *
          * @returns void
          */
-        clearInput() {
-            this.input = '';
-        },
+    clearInput () {
+      this.input = '';
+    },
 
-        /**
+    /**
          * Process all the keyup events.
          *
          * @param e
          * @returns void
          */
-        onKeyUp(e: Event) {
-            this.$emit('keyup', e);
-        },
+    onKeyUp (e: Event) {
+      this.$emit('keyup', e);
+    },
 
-        /**
+    /**
          * Process all the keydown events.
          *
          * @param e
          * @returns void
          */
-        onKeyDown(e: Event) {
-            this.$emit('keydown', e);
-        },
+    onKeyDown (e: Event) {
+      this.$emit('keydown', e);
+    },
 
-        /**
+    /**
          * Process the onfocus event.
          *
          * @param e
          * @returns void
          */
-        onFocus(e: Event) {
-            this.$emit('focus', e);
+    onFocus (e: Event) {
+      this.$emit('focus', e);
 
-            this.isActive = true;
-        },
+      this.isActive = true;
+    },
 
-        /**
+    /**
          * Process the onClick event.
          *
          * @param e
          * @returns void
          */
-        onClick(e: Event) {
-            this.$emit('click', e);
+    onClick (e: Event) {
+      this.$emit('click', e);
 
-            this.isActive = true;
+      this.isActive = true;
 
-            this.searchTag();
-        },
+      this.searchTag();
+    },
 
-        /**
+    /**
          * Process the onblur event.
          *
          * @param e
          * @returns void
          */
-        onBlur(e: Event) {
-            this.$emit('blur', e)
+    onBlur (e: Event) {
+      this.$emit('blur', e);
 
-            if (this.addTagsOnBlur) {
-                // Add the inputed tag
-                this.tagFromInput(true);
-            }
+      if (this.addTagsOnBlur) {
+        // Add the inputed tag
+        this.tagFromInput(true);
+      }
 
-            if (!this.typeaheadAlwaysShow) {
-                this.hideTypeahead();
-            } else {
-                this.searchTag();
-            }
+      if (!this.typeaheadAlwaysShow) {
+        this.hideTypeahead();
+      } else {
+        this.searchTag();
+      }
 
-            this.isActive = false;
-        },
+      this.isActive = false;
+    },
 
-        hiddenInputValue(tag: Tag) {
-            // Return all fields
-            if (!this.valueFields) {
-                return JSON.stringify(tag);
-            }
+    hiddenInputValue (tag: Tag) {
+      // Return all fields
+      if (!this.valueFields) {
+        return JSON.stringify(tag);
+      }
 
-            const fields = this.valueFields.replace(/\s/, '').split(',');
+      const fields = this.valueFields.replace(/\s/, '').split(',');
 
-            // A single field
-            if (fields.length === 1) {
-                return tag[fields[0]];
-            } else {
-                // Specified fields
-                return JSON.stringify(
-                    Object.assign(
-                        {},
-                        ...fields.map(field => ({ [field]: tag[field] }))
-                    )
-                );
-            }
-        },
+      // A single field
+      if (fields.length === 1) {
+        return tag[fields[0]];
+      } else {
+        // Specified fields
+        return JSON.stringify(
+          Object.assign(
+            {},
+            ...fields.map((field) => ({ [field]: tag[field] })),
+          ),
+        );
+      }
+    },
 
-        getDisplayField(tag: Tag) {
-            const hasDisplayField = this.displayField !== undefined
+    getDisplayField (tag: Tag) {
+      const hasDisplayField = this.displayField !== undefined
                 && this.displayField !== null
                 && tag[this.displayField] !== undefined
                 && tag[this.displayField] !== null
                 && tag[this.displayField] !== '';
 
-            return hasDisplayField
-                ? tag[this.displayField]
-                : tag[this.textField];
-        },
+      return hasDisplayField
+        ? tag[this.displayField]
+        : tag[this.textField];
+    },
 
-        cloneArray(arr: any[]) {
-            return arr.map(el => Object.assign({}, el));
-        }
-    }
+    cloneArray (arr: any[]) {
+      return arr.map((el) => Object.assign({}, el));
+    },
+  },
 });
 </script>
 

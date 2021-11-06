@@ -3,14 +3,14 @@
  */
 
 import { VueConstructor } from 'vue';
-import TagsInput from './TagsInput.vue'
+import TagsInput from './TagsInput.vue';
 
 export * from './Tag';
 
 export { TagsInput };
 
 export function install (Vue: VueConstructor) {
-    Vue.component('TagsInput', TagsInput);
+  Vue.component('TagsInput', TagsInput);
 }
 
 export default install;

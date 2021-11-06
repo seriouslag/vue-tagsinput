@@ -1,6 +1,6 @@
 {
   "name": "@seriouslag/vue-tagsinput",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "A simple tags input with typeahead made with Vue.js 2",
   "contributors": [
     {
@@ -18,7 +18,8 @@
     "start": "npm run serve",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --target lib --name 'TagsInput' ./src/index.ts",
-    "build:demo": "vue-cli-service build"
+    "build:demo": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
   },
   "main": "dist/TagsInput.common.js",
   "buildEntry": "src/",
@@ -33,20 +34,25 @@
     "LICENSE"
   ],
   "dependencies": {
-    "core-js": "^3.18.1"
+    "core-js": "^3.x"
   },
   "devDependencies": {
-    "@types/webpack-env": "^1.16.2",
-    "@vue/cli": "~4.5.13",
-    "@vue/cli-plugin-babel": "~4.5.13",
-    "@vue/cli-plugin-typescript": "~4.5.13",
-    "@vue/cli-service": "~4.5.13",
+    "@types/webpack-env": "^1.16.3",
+    "@typescript-eslint/eslint-plugin": "^5.3.0",
+    "@typescript-eslint/parser": "^5.3.0",
+    "@vue/cli": "^4.5.15",
+    "@vue/cli-plugin-babel": "^4.5.15",
+    "@vue/cli-plugin-eslint": "^4.5.15",
+    "@vue/cli-plugin-typescript": "^4.5.15",
+    "@vue/cli-service": "^4.5.15",
     "bulma": "^0.9.3",
     "cache-loader": "^4.1.0",
     "cross-env": "^7.0.3",
-    "sass": "^1.42.1",
+    "eslint": "^6.8.0",
+    "eslint-plugin-vue": "^8.0.3",
+    "sass": "^1.43.4",
     "sass-loader": "version-10",
-    "typescript": "^4.4.3",
+    "typescript": "^4.4.4",
     "vue-template-compiler": "^2.6.14"
   },
   "peerDependencies": {
@@ -67,7 +73,7 @@
     "typeahead",
     "autocomplete"
   ],
-  "license" : "SEE LICENSE IN LICENSE",
+  "license": "SEE LICENSE IN LICENSE",
   "repository": "https://github.com/seriouslag/vue-tagsinput",
   "homepage": "https://github.com/seriouslag/vue-tagsinput#readme"
 }

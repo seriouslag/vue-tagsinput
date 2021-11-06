@@ -33,7 +33,7 @@
 
                     <div class="field">
                         <label class="label">Limit</label>
-                    
+
                         <div class="control">
                             <input class="input" type="text" v-model="limit">
                         </div>
@@ -86,7 +86,7 @@
                     <div v-show="typeahead" style="margin-bottom: 1rem;">
                         <div class="field">
                             <label class="label">Typeahead Style</label>
-                        
+
                             <div class="control">
                                 <select class="input" type="text" v-model="typeaheadStyle">
                                     <option value="badges">Badges</option>
@@ -97,7 +97,7 @@
 
                         <div class="field">
                             <label class="label">Typeahead Max Results</label>
-                        
+
                             <div class="control">
                                 <input class="input" type="text" v-model="typeaheadMaxResults">
                             </div>
@@ -105,7 +105,7 @@
 
                         <div class="field">
                             <label class="label">Typeahead Activation Threshold</label>
-                        
+
                             <div class="control">
                                 <input class="input" type="text" v-model="typeaheadActivationThreshold">
                             </div>
@@ -115,7 +115,7 @@
                     <div class="field">
                         <div class="control">
                             <label class="checkbox">
-                                <input type="checkbox" v-model="onlyExistingTags"> 
+                                <input type="checkbox" v-model="onlyExistingTags">
                                 Allow to add only existing tags
                             </label>
                         </div>
@@ -124,7 +124,7 @@
                     <div class="field">
                         <div class="control">
                             <label class="checkbox">
-                                <input type="checkbox" v-model="caseSensitiveTags"> 
+                                <input type="checkbox" v-model="caseSensitiveTags">
                                 Tags are case sensitive
                             </label>
                         </div>
@@ -133,7 +133,7 @@
                     <div class="field">
                         <div class="control">
                             <label class="checkbox">
-                                <input type="checkbox" v-model="deleteOnBackspace"> 
+                                <input type="checkbox" v-model="deleteOnBackspace">
                                 Delete on Backspace
                             </label>
                         </div>
@@ -142,7 +142,7 @@
                     <div class="field">
                         <div class="control">
                             <label class="checkbox">
-                                <input type="checkbox" v-model="allowDuplicates"> 
+                                <input type="checkbox" v-model="allowDuplicates">
                                 Allow Duplicates
                             </label>
                         </div>
@@ -151,7 +151,7 @@
                     <div class="field">
                         <div class="control">
                             <label class="checkbox">
-                                <input type="checkbox" v-model="addTagsOnComma"> 
+                                <input type="checkbox" v-model="addTagsOnComma">
                                 Add Tags on Comma
                             </label>
                         </div>
@@ -160,7 +160,7 @@
                     <div class="field">
                         <div class="control">
                             <label class="checkbox">
-                                <input type="checkbox" v-model="addTagsOnSpace"> 
+                                <input type="checkbox" v-model="addTagsOnSpace">
                                 Add Tags on Space
                             </label>
                         </div>
@@ -169,7 +169,7 @@
                     <div class="field">
                         <div class="control">
                             <label class="checkbox">
-                                <input type="checkbox" v-model="addTagsOnBlur"> 
+                                <input type="checkbox" v-model="addTagsOnBlur">
                                 Add Tags on Blur
                             </label>
                         </div>
@@ -236,7 +236,7 @@
                     <p v-text="selectedTags"></p>
 
                     <h2 class="is-size-5" style="margin-top: 1rem;">Data Events (new at the top)</h2>
-                    
+
                     <pre v-text="eventLog"></pre>
 
                     <hr>
@@ -277,73 +277,73 @@ import { Tag } from './Tag';
 import TagsInput from './TagsInput.vue';
 
 export default Vue.extend({
-    components: {
-        TagsInput,
+  components: {
+    TagsInput,
+  },
+  data: () => ({
+    selectedTags: [
+      {
+        key: 'ne-obliviscaris',
+        value: 'Ne Obliviscaris',
+      },
+      {
+        key: 'epica',
+        value: 'Epica',
+      },
+      {
+        key: 'shape-of-despair',
+        value: 'Shape of Despair',
+      },
+    ] as Tag[],
+    typeahead: true,
+    typeaheadStyle: 'badges',
+    placeholder: 'Customizable placeholder',
+    limit: 0,
+    onlyExistingTags: false,
+    caseSensitiveTags: false,
+    deleteOnBackspace: true,
+    allowDuplicates: false,
+    addTagsOnComma: false,
+    addTagsOnSpace: false,
+    addTagsOnBlur: false,
+    hideInputOnLimit: false,
+    typeaheadHideDiscard: false,
+    typeaheadMaxResults: 20,
+    typeaheadActivationThreshold: 1,
+    typeheadAlwaysShow: false,
+    typeaheadShowOnFocus: true,
+    logChangeEvents: false,
+
+    // Display fields demo
+    eventLog: '',
+    selectedTags2: [] as Tag[],
+  }),
+  methods: {
+    logEvent (text: string) {
+      this.eventLog = text + this.eventLog;
     },
-    data: () => ({
-        selectedTags: [
-            {
-                key: 'ne-obliviscaris',
-                value: 'Ne Obliviscaris'
-            },
-            {
-                key: 'epica',
-                value: 'Epica'
-            },
-            {
-                key: 'shape-of-despair',
-                value: 'Shape of Despair'
-            },
-        ] as Tag[],
-        typeahead: true,
-        typeaheadStyle: 'badges',
-        placeholder: 'Customizable placeholder',
-        limit: 0,
-        onlyExistingTags: false,
-        caseSensitiveTags: false,
-        deleteOnBackspace: true,
-        allowDuplicates: false,
-        addTagsOnComma: false,
-        addTagsOnSpace: false,
-        addTagsOnBlur: false,
-        hideInputOnLimit: false,
-        typeaheadHideDiscard: false,
-        typeaheadMaxResults: 20,
-        typeaheadActivationThreshold: 1,
-        typeheadAlwaysShow: false,
-        typeaheadShowOnFocus: true,
-        logChangeEvents: false,
 
-        // Display fields demo
-        eventLog: '',
-        selectedTags2: [] as Tag[],
-    }),
-    methods: {
-        logEvent(text: string) {
-            this.eventLog = text + this.eventLog;
-        },
+    onInitialized () {
+      this.logEvent('Initialized\n');
+    },
 
-        onInitialized() {
-            this.logEvent('Initialized\n');
-        },
+    onTagAdded (tag: Tag) {
+      this.logEvent(`Tag added: "${JSON.stringify(tag)}"\n`);
+    },
 
-        onTagAdded(tag: Tag) {
-            this.logEvent(`Tag added: "${JSON.stringify(tag)}"\n`);
-        },
+    onTagRemoved (tag: Tag) {
+      this.logEvent(`Tag removed: "${JSON.stringify(tag)}"\n`);
+    },
 
-        onTagRemoved(tag: Tag) {
-            this.logEvent(`Tag removed: "${JSON.stringify(tag)}"\n`);
-        },
+    onTagsUpdated () {
+      this.logEvent('Tags updated\n');
+    },
 
-        onTagsUpdated() {
-            this.logEvent('Tags updated\n');
-        },
-
-        onChange(evt: Event) {
-            if (this.logChangeEvents) {
-                this.logEvent(`Changed ${JSON.stringify(evt)}\n`);
-            }
-        },
-    }
-})
+    onChange (evt: Event) {
+      if (this.logChangeEvents) {
+        this.logEvent(`Changed ${JSON.stringify(evt)}\n`);
+      }
+    },
+  },
+});
 </script>
