@@ -24,20 +24,27 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+        name: Checkout
       - uses: actions/setup-node@v2
+        name: Setup Node
         with:
           node-version: "16"
           check-latest: true
           cache: "npm"
       - run: npm install
+        name: Install
       - run: npm run lint
+        name: Lint
       - run: npm run build
+        name: Build
       - uses: JS-DevTools/npm-publish@v1
+        name: Publish to npm
         with:
           token: ${{ secrets.NPMJS_TOKEN }}
           registry: https://registry.npmjs.org/
           check-version: true
       - uses: JS-DevTools/npm-publish@v1
+        name: Publish to GitHub
         with:
           token: ${{ secrets.GH_TOKEN }}
           registry: https://npm.pkg.github.com
