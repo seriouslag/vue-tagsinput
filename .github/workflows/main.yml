@@ -48,4 +48,4 @@ jobs:
         with:
           token: ${{ secrets.GH_TOKEN }}
           registry: https://npm.pkg.github.com
-          check-version: false
+          check-version: true
